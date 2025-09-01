@@ -3,6 +3,7 @@ package futurodev.acoes_futuro_api.service;
 import futurodev.acoes_futuro_api.model.dto.AcaoRequest;
 import futurodev.acoes_futuro_api.model.dto.AcaoResponse;
 import futurodev.acoes_futuro_api.model.entity.AcaoSustentavel;
+import futurodev.acoes_futuro_api.model.exceptions.ResourceNotFoundException;
 import futurodev.acoes_futuro_api.repository.AcaoSustentavelRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class AcaoService {
 
     public AcaoResponse buscarPorId(Long id) {
         AcaoSustentavel acao = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Ação não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException("Ação não encontrada com o ID" + id));
         return toResponseDTO(acao);
     }
 
@@ -40,7 +41,7 @@ public class AcaoService {
 
     public AcaoResponse atualizar(Long id, AcaoRequest dto) {
         AcaoSustentavel existente = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Ação sustentável não encontrada com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Ação não encontrada com o ID" + id));
 
         existente.setTitulo(dto.getTitulo());
         existente.setDescricao(dto.getDescricao());
@@ -54,7 +55,7 @@ public class AcaoService {
 
     public void excluir(Long id) {
         if (!repository.existsById(id)) {
-            throw new EntityNotFoundException("Ação sustentável não encontrada com ID: " + id);
+            throw new ResourceNotFoundException("Ação não encontrada com o ID" + id);
         }
         repository.deleteById(id);
     }
