@@ -3,6 +3,7 @@ package futurodev.acoes_futuro_api.controller;
 
 import futurodev.acoes_futuro_api.model.dto.AcaoRequest;
 import futurodev.acoes_futuro_api.model.dto.AcaoResponse;
+import futurodev.acoes_futuro_api.model.entity.AcaoSustentavel;
 import futurodev.acoes_futuro_api.service.AcaoService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,12 @@ public class AcaoController {
     @GetMapping("/{id}")
     public ResponseEntity<AcaoResponse> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(service.buscarPorId(id));
+    }
+
+    @GetMapping("/categoria")
+    public ResponseEntity<List<AcaoSustentavel>> filtrarPorCategoria(@RequestParam String tipo){
+        List<AcaoSustentavel> lista = service.buscarPorCategoria(tipo);
+        return ResponseEntity.ok(lista);
     }
 
     @PostMapping

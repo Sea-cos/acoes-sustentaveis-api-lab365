@@ -1,5 +1,6 @@
 package futurodev.acoes_futuro_api.service;
 
+import futurodev.acoes_futuro_api.model.Enums.CategoriaAcao;
 import futurodev.acoes_futuro_api.model.dto.AcaoRequest;
 import futurodev.acoes_futuro_api.model.dto.AcaoResponse;
 import futurodev.acoes_futuro_api.model.entity.AcaoSustentavel;
@@ -31,6 +32,21 @@ public class AcaoService {
         AcaoSustentavel acao = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ação não encontrada com o ID" + id));
         return toResponseDTO(acao);
+    }
+
+    public List<AcaoSustentavel> buscarPorCategoria(String tipo){
+        try {
+            CategoriaAcao categoria = CategoriaAcao.valueOf(tipo.toUpperCase());
+            List<AcaoSustentavel> lista = repository.findByCategoria(categoria);
+
+            if (lista.isEmpty()){
+                throw new ResourceNotFoundException("Nenhuma ação encontrada com a categoria: " + categoria);
+            }
+
+            return lista;
+        } catch (IllegalArgumentException e){
+            throw new ResourceNotFoundException("Categoria inválida: " + tipo);
+        }
     }
 
     public AcaoResponse criar(AcaoRequest dto) {
